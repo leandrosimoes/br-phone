@@ -1,48 +1,33 @@
 ;(function(document, window, commonjs) {
-    var codes = [];
-    var statesCodes = {
-        AC: [68],
-        AL: [82],
-        AM: [92, 97],
-        AP: [96],
-        BA: [71, 73, 74, 75, 77],
-        CE: [85, 88],
-        DF: [61],
-        ES: [27, 28],
-        GO: [61, 62, 64],
-        MA: [98, 99],
-        MG: [31, 32, 33, 34, 35, 37, 38],
-        MS: [67],
-        MT: [65, 66],
-        PA: [91, 93, 94],
-        PB: [83],
-        PE: [81, 87],
-        PI: [86, 89],
-        PR: [41, 42, 43, 44, 45, 46],
-        RJ: [21, 22, 24],
-        RN: [84],
-        RO: [69],
-        RR: [95],
-        RS: [51, 53, 54, 55],
-        SC: [47, 48, 49],
-        SE: [79],
-        SP: [11, 12, 13, 14, 15, 16, 17, 18, 19],
-        TO: [63]
-    };
-
     function fillCodes() {
-        for (var code in stateCodes) {
-            if (stateCodes.hasOwnProperty(code) && codes.indexOf(code) === -1) {
-                codes.push(stateCodes[code]);
+        var codes = [];
+        
+        for (var code in br_phone.stateCodes) {
+            if (br_phone.stateCodes.hasOwnProperty(code) && codes.indexOf(code) === -1) {
+                var currentCodes = br_phone.stateCodes[code];
+                for (var index = 0; index < currentCodes.length; index++) {
+                    codes.push(currentCodes[index]);
+                }
             }
         }
 
         return codes;
     };
 
-    function validatePhoneFormat(number) {
+    function getCode(number) {
         try {
-            var validateRegex = '\+[5, 5]{2} \([0-9]{2}\) [2-9][0-9]{3,4}\-[0-9]{4}';
+            return parseInt(number.match(/\([0-9]{2}\)/)[0].match(/[0-9]{2}/) || '0');            
+        } catch (error) {
+            return 0;
+        }
+    };
+
+    function validatePhoneFormat(number, withCountryCode) {
+        try {
+            var validateRegex = !!withCountryCode && withCountryCode === true ? 
+                /\+[5, 5]{2} \([0-9]{2}\) [2-9][0-9]{3,4}\-[0-9]{4}/ :
+                /\([0-9]{2}\) [2-9][0-9]{3,4}\-[0-9]{4}/;
+
             if(validateRegex.test(number)) {
                 return true;
             } else {
@@ -54,27 +39,23 @@
         }
     };
 
-    function getCode(number) {
-        return parseInt(number.match('^\([0-9]{2})$') || '0');
-    }
-
     function validatePhoneCode(number) {
         try {
             var code = getCode(number);
-            return !!code && ls_phone.phoneCodes.indexOf(code) !== -1;
+            return !!code && br_phone.phoneCodes.indexOf(code) !== -1;
         } catch (error) {
             console.log('Invalid state phone code.');
             return false;
         }
     };
 
-    function getStateInitials(number) {
-        var code = getCode(number),
+    function getStateInitials(numberOrCode) {
+        var code = (numberOrCode.length > 2 ? getCode(numberOrCode) : numberOrCode),
             stateReturn = '';
         
-        for (var state in ls_phone.stateCodes) {
-            if (ls_phone.stateCodes.hasOwnProperty(state)) {
-                if(!stateReturn && ls_phone.stateCodes[state].indexOf(code) !== -1) {
+        for (var state in br_phone.stateCodes) {
+            if (br_phone.stateCodes.hasOwnProperty(state)) {
+                if(!stateReturn && br_phone.stateCodes[state].indexOf(code) !== -1) {
                     stateReturn = state;
                 }                
             }
@@ -85,15 +66,15 @@
 
     function getStateCodes(stateInitials) {
         try {            
-            return ls_stateCodes[stateInitials] || 0;
+            return br_phone.stateCodes[stateInitials] || [];
         } catch (error) {
-            return 0;
+            return [];
         }
     };
 
-    var ls_phone = {
-        isValid: function(number) {
-            return validatePhoneFormat(number) && 
+    var br_phone = {
+        isValid: function(number, withCountryCode) {
+            return validatePhoneFormat(number, withCountryCode) && 
                    validatePhoneCode(number);
         },
         getStateInitials: function(number) {
@@ -105,14 +86,42 @@
         getCountyCode: function() {
             return 55;
         },
-        phoneCodes: fillCodes(),
-        stateCodes: statesCodes
+        stateCodes: {
+            AC: [68],
+            AL: [82],
+            AM: [92, 97],
+            AP: [96],
+            BA: [71, 73, 74, 75, 77],
+            CE: [85, 88],
+            DF: [61],
+            ES: [27, 28],
+            GO: [61, 62, 64],
+            MA: [98, 99],
+            MG: [31, 32, 33, 34, 35, 37, 38],
+            MS: [67],
+            MT: [65, 66],
+            PA: [91, 93, 94],
+            PB: [83],
+            PE: [81, 87],
+            PI: [86, 89],
+            PR: [41, 42, 43, 44, 45, 46],
+            RJ: [21, 22, 24],
+            RN: [84],
+            RO: [69],
+            RR: [95],
+            RS: [51, 53, 54, 55],
+            SC: [47, 48, 49],
+            SE: [79],
+            SP: [11, 12, 13, 14, 15, 16, 17, 18, 19],
+            TO: [63]
+        }
     };
 
     if(!!commonjs) {
-        module.export = ls_phone;
+        module.export = br_phone;
     } else {
-        window.ls_phone = ls_phone;
+        window.br_phone = br_phone;
     }
 
-})(document, window, typeof module !== undefined);
+    br_phone.phoneCodes = fillCodes();
+})(document, window, typeof (exports) !== "undefined");
