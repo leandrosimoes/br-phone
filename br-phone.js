@@ -49,8 +49,23 @@
         }
     };
 
-    function getStateInitials(numberOrCode) {
-        var code = (numberOrCode.length > 2 ? getCode(numberOrCode) : numberOrCode),
+    function getStateInitialsByPhoneNumber(phoneNumber) {
+        var code = getCode(phoneNumber),
+            stateReturn = '';
+        
+        for (var state in br_phone.stateCodes) {
+            if (br_phone.stateCodes.hasOwnProperty(state)) {
+                if(!stateReturn && br_phone.stateCodes[state].indexOf(code) !== -1) {
+                    stateReturn = state;
+                }                
+            }
+        }
+
+        return stateReturn;
+    };
+
+    function getStateInitialsByCityCode(cityCode) {
+        var code = cityCode,
             stateReturn = '';
         
         for (var state in br_phone.stateCodes) {
@@ -77,14 +92,46 @@
             return validatePhoneFormat(number, withCountryCode) && 
                    validatePhoneCode(number);
         },
-        getStateInitials: function(number) {
-            return getStateInitials(number);
+        getStateInitialsByPhoneNumber: function(phoneNumber) {
+            return getStateInitialsByPhoneNumber(phoneNumber);
         },
-        getStateCodes: function(state) {
-            return getStateCodes(state);
+        getStateInitialsByCityCode: function(cityCode) {
+            return getStateInitialsByCityCode(cityCode);
+        },
+        getStateCodes: function(stateInitials) {
+            return getStateCodes(stateInitials);
         },
         getCountyCode: function() {
             return 55;
+        },
+        states: {
+            AC: 'AC',
+            AL: 'AL',
+            AM: 'AM',
+            AP: 'AP',
+            BA: 'BA',
+            CE: 'CE',
+            DF: 'DF',
+            ES: 'ES',
+            GO: 'GO',
+            MA: 'MA',
+            MG: 'MG',
+            MS: 'MS',
+            MT: 'MT',
+            PA: 'PA',
+            PB: 'PB',
+            PE: 'PE',
+            PI: 'PI',
+            PR: 'PR',
+            RJ: 'RJ',
+            RN: 'RN',
+            RO: 'RO',
+            RR: 'RR',
+            RS: 'RS',
+            SC: 'SC',
+            SE: 'SE',
+            SP: 'SP',
+            TO: 'TO'
         },
         stateCodes: {
             AC: [68],
