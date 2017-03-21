@@ -1,7 +1,7 @@
 {
-  "name": "br-phone",
-  "main": "br-phone.js",
-  "homepage": "https://github.com/leandrosimoes/br-phone",
+  "name": "ls-phone",
+  "main": "ls-phone.js",
+  "homepage": "https://github.com/leandrosimoes/ls-phone",
   "authors": [
     "Leandro Simões <leandro.simoes@outlook.com>"
   ],
