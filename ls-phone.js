@@ -2,9 +2,9 @@
     function fillCodes() {
         var codes = [];
         
-        for (var code in br_phone.stateCodes) {
-            if (br_phone.stateCodes.hasOwnProperty(code) && codes.indexOf(code) === -1) {
-                var currentCodes = br_phone.stateCodes[code];
+        for (var code in ls_phone.stateCodes) {
+            if (ls_phone.stateCodes.hasOwnProperty(code) && codes.indexOf(code) === -1) {
+                var currentCodes = ls_phone.stateCodes[code];
                 for (var index = 0; index < currentCodes.length; index++) {
                     codes.push(currentCodes[index]);
                 }
@@ -42,7 +42,7 @@
     function validatePhoneCode(number) {
         try {
             var code = getCode(number);
-            return !!code && br_phone.phoneCodes.indexOf(code) !== -1;
+            return !!code && ls_phone.phoneCodes.indexOf(code) !== -1;
         } catch (error) {
             console.log('Invalid state phone code.');
             return false;
@@ -53,9 +53,9 @@
         var code = getCode(phoneNumber),
             stateReturn = '';
         
-        for (var state in br_phone.stateCodes) {
-            if (br_phone.stateCodes.hasOwnProperty(state)) {
-                if(!stateReturn && br_phone.stateCodes[state].indexOf(code) !== -1) {
+        for (var state in ls_phone.stateCodes) {
+            if (ls_phone.stateCodes.hasOwnProperty(state)) {
+                if(!stateReturn && ls_phone.stateCodes[state].indexOf(code) !== -1) {
                     stateReturn = state;
                 }                
             }
@@ -68,9 +68,9 @@
         var code = cityCode,
             stateReturn = '';
         
-        for (var state in br_phone.stateCodes) {
-            if (br_phone.stateCodes.hasOwnProperty(state)) {
-                if(!stateReturn && br_phone.stateCodes[state].indexOf(code) !== -1) {
+        for (var state in ls_phone.stateCodes) {
+            if (ls_phone.stateCodes.hasOwnProperty(state)) {
+                if(!stateReturn && ls_phone.stateCodes[state].indexOf(code) !== -1) {
                     stateReturn = state;
                 }                
             }
@@ -81,13 +81,13 @@
 
     function getStateCodes(stateInitials) {
         try {            
-            return br_phone.stateCodes[stateInitials] || [];
+            return ls_phone.stateCodes[stateInitials] || [];
         } catch (error) {
             return [];
         }
     };
 
-    var br_phone = {
+    var ls_phone = {
         isValid: function(number, withCountryCode) {
             return validatePhoneFormat(number, withCountryCode) && 
                    validatePhoneCode(number);
@@ -165,10 +165,10 @@
     };
 
     if(!!commonjs) {
-        module.export = br_phone;
+        module.export = ls_phone;
     } else {
-        window.br_phone = br_phone;
+        window.br_phone = ls_phone;
     }
 
-    br_phone.phoneCodes = fillCodes();
+    ls_phone.phoneCodes = fillCodes();
 })(document, window, typeof (exports) !== "undefined");
