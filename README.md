@@ -3,7 +3,7 @@ A little Brazil phone number validation lib.
 
 ### How to install?
 
-`bower install br-phone --save`
+`bower install ls-phone --save`
 
 or just put the `br-phone.js` into your page.
 
