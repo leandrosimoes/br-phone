@@ -101,13 +101,30 @@
             result.push(ls_phone.blackList[i]);
         }
 
-        console.log(result);
-
         return result;
     };
 
-    function clearBlackList() {
+    function clearBlackList(keepDefaults) {
         ls_phone.blackList = [];
+
+        var persistentDataToRemove = [];
+        for (var key in localStorage) {
+            if (localStorage.hasOwnProperty(key)) {
+                if(key.indexOf('lsphone-bl-') !== -1) {
+                    persistentDataToRemove.push(key);
+                }                
+            }
+        }
+        
+        for (var i = 0; i < persistentDataToRemove.length; i++) {
+            var key = persistentDataToRemove[i];
+            
+            localStorage.removeItem(key);
+        }
+
+        if(!!keepDefaults) {
+            ls_phone.blackList = fillBlackList();
+        }
     };
 
     function getStateInitialsByPhoneNumber(phoneNumber) {
@@ -177,7 +194,7 @@
         for (var key in localStorage) {
             if (localStorage.hasOwnProperty(key)) {
                 if(key.indexOf('lsphone-bl-') !== -1) {
-                    result.push(localStorage.getItem(key));
+                    result.push(key.replace('lsphone-bl-', ''));
                 }               
             }
         }
@@ -195,8 +212,8 @@
         getBlackList: function () {
             return getBlackList();
         },
-        clearBlackList: function () {
-            return clearBlackList();
+        clearBlackList: function (keepDefaults) {
+            return clearBlackList(keepDefaults);
         },
         isValid: function (number, withCountryCode) {
             return validatePhoneFormat(number, withCountryCode) &&
