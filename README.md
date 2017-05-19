@@ -5,7 +5,7 @@ A little Brazil phone number validation lib.
 
 `bower install ls-phone --save`
 
-or just put the `br-phone.js` into your page.
+then just put the `ls-phone.js` into your page.
 
 ### How to use?
 
