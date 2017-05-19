@@ -16,6 +16,6 @@
   "license": "MIT",
   "ignore": [
     "*",
-    "dist/js/*"
+    "!dist/js/*"
   ]
 }
